@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         App\Providers\SiswakuAppServiceProvider::class,
+        App\Providers\FormSiswaProvider::class,
 
     ],
 
