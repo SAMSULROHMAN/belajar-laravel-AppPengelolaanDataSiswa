@@ -26,6 +26,12 @@
                     {{ $siswa->jenis_kelamin }}
                 </td>
             </tr>
+            <tr>
+                <th>Kelas</th>
+                <td>
+                    {{ $siswa->kelas->nama_kelas }}
+                </td>
+            </tr>
         </table>
     </div>
 @endsection

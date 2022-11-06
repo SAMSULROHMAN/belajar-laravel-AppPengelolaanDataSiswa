@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Siswa;
 use App\Telepon;
+use App\Kelas;
 use Illuminate\Support\Facades\Validator;
 
 class SiswaController extends Controller
@@ -19,7 +20,8 @@ class SiswaController extends Controller
 
     public function create()
     {
-        return view('siswa.create');
+        $list_kelas = Kelas::pluck('nama_kelas','id');
+        return view('siswa.create',compact('list_kelas'));
     }
 
     public function store(Request $request)
@@ -31,7 +33,8 @@ class SiswaController extends Controller
             'nama_siswa' => 'required|string|max:30',
             'tanggal_lahir' => 'required|date',
             'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon',
-            'jenis_kelamin' => 'required|in:L,P'
+            'jenis_kelamin' => 'required|in:L,P',
+            'id_kelas' => 'required'
         ]);
 
         if($validator->fails())
@@ -58,10 +61,11 @@ class SiswaController extends Controller
     public function edit($id)
     {
         $siswa = Siswa::findOrFail($id);
+        $list_kelas = Kelas::pluck('nama_kelas','id');
         if (!empty($siswa->telepon->nomor_telepon)) {
             $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
         }
-        return view('siswa.edit',compact('siswa'));
+        return view('siswa.edit',compact('siswa','list_kelas'));
     }
 
     public function update($id,Request $request)
@@ -76,6 +80,7 @@ class SiswaController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:L,P',
             'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon',
+            'id_kelas' => 'required'
         ]);
 
         if($validator->fails())

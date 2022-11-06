@@ -1,6 +1,7 @@
 @if (isset($siswa))
     {!! Form::hidden('id', $siswa->id) !!}
 @endif
+{{-- NISN --}}
 @if ($errors->any())
     <div class="form-group {{ $errors->has('nisn') ?  'has-error' : 'has-success' }}">
 @else
@@ -12,6 +13,7 @@
             <span class="help-block">{{ $errors->first('nisn') }}</span>
         @endif
     </div>
+{{-- Nama Siswa --}}
 @if ($errors->any())
     <div class="form-group {{ $errors->has('nama_siswa') ?  'has-error' : 'has-success' }}">
 @else
@@ -23,6 +25,7 @@
             <span class="help-block">{{ $errors->first('nama_siswa') }}</span>
         @endif
     </div>
+{{-- Tanggal Lahir--}}
 @if ($errors->any())
     <div class="form-group {{ $errors->has('tanggal_lahir') ?  'has-error' : 'has-success' }}">
 @else
@@ -35,6 +38,7 @@
             <span class="help-block">{{ $errors->first('tanggal_lahir') }}</span>
         @endif
     </div>
+{{-- Nomor Telepon --}}
 @if ($errors->any())
     <div class="form-group {{ $errors->has('nomor_telepon') ?  'has-error' : 'has-success' }}">
 @else
@@ -47,6 +51,22 @@
             <span class="help-block">{{ $errors->first('nomor_telepon') }}</span>
         @endif
     </div>
+{{-- Kelas --}}
+@if ($errors->any())
+    <div class="form-group {{ $errors->has('id_kelas') ?  'has-error' : 'has-success' }}">
+@else
+    <div class="form-group">
+@endif
+    {!! Form::label('id_kelas', 'Kelas:', ['class' => 'control-label']) !!}
+    @if (count($list_kelas) > 0)
+        {!! Form::select('id_kelas', $list_kelas, null, ['class' => 'form-control','id' => 'id_kelas', 'placeholder' => 'Pilih Kelas']) !!}
+    @else
+        <p>Tidak Ada pilihan kelas, Buat dulu ya....! </p>
+    @endif
+    @if ($errors->has('id_kelas'))
+        <span class="help-block">{{ $errors->first('id_kelas') }}</span>
+    @endif
+{{-- Jenis Kelamin --}}
 @if ($errors->any())
     <div class="form-group {{ $errors->has('jenis_kelamin') ?  'has-error' : 'has-success' }}">
 @else
