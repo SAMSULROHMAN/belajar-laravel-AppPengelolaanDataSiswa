@@ -30,7 +30,8 @@ class SiswaController extends Controller
     {
         $input = $request->all();
 
-        $validator = Validator::make($input,[
+        // Pake trait ValidateRequest
+        $this->validate($request,[
             'nisn' => 'required|string|size:4|unique:siswa,nisn',
             'nama_siswa' => 'required|string|max:30',
             'tanggal_lahir' => 'required|date',
@@ -38,13 +39,6 @@ class SiswaController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'id_kelas' => 'required',
         ]);
-
-        if($validator->fails())
-        {
-            return redirect('siswa/create')
-            ->withInput()
-            ->withErrors($validator);
-        }
 
         $siswa = Siswa::create($input);
         $telepon = new Telepon();
@@ -79,7 +73,7 @@ class SiswaController extends Controller
 
         $input = $request->all();
 
-        $validator = Validator::make($input,[
+        $this->validate($request, [
             'nisn' => 'required|string|size:4|unique:siswa,nisn,'.$request->input('id'),
             'nama_siswa' => 'required|string|max:30',
             'tanggal_lahir' => 'required|date',
@@ -88,12 +82,8 @@ class SiswaController extends Controller
             'id_kelas' => 'required'
         ]);
 
-        if($validator->fails())
-        {
-            return redirect('siswa/'.$id.'/edit')->withInput()->withErrors($validator);
-        }
         $siswa->update($request->all());
-        
+
         $telepon = $siswa->telepon;
         $telepon->nomor_telepon = $request->input('nomor_telepon');
         $siswa->telepon()->save($telepon);
