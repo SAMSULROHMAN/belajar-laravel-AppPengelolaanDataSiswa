@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Hobi;
 use Illuminate\Http\Request;
 use App\Siswa;
 use App\Telepon;
@@ -21,7 +22,8 @@ class SiswaController extends Controller
     public function create()
     {
         $list_kelas = Kelas::pluck('nama_kelas','id');
-        return view('siswa.create',compact('list_kelas'));
+        $list_hobi = Hobi::pluck('nama_hobi','id');
+        return view('siswa.create',compact('list_kelas','list_hobi'));
     }
 
     public function store(Request $request)
@@ -34,7 +36,7 @@ class SiswaController extends Controller
             'tanggal_lahir' => 'required|date',
             'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon',
             'jenis_kelamin' => 'required|in:L,P',
-            'id_kelas' => 'required'
+            'id_kelas' => 'required',
         ]);
 
         if($validator->fails())
@@ -48,6 +50,8 @@ class SiswaController extends Controller
         $telepon = new Telepon();
         $telepon->nomor_telepon = $request->input('nomor_telepon');
         $siswa->telepon()->save($telepon);
+
+        $siswa->hobi()->attach($request->input('hobi_siswa'));
 
         return redirect('siswa');
     }
@@ -65,7 +69,8 @@ class SiswaController extends Controller
         if (!empty($siswa->telepon->nomor_telepon)) {
             $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
         }
-        return view('siswa.edit',compact('siswa','list_kelas'));
+        $list_hobi = Hobi::pluck('nama_hobi','id');
+        return view('siswa.edit',compact('siswa','list_kelas','list_hobi'));
     }
 
     public function update($id,Request $request)
@@ -79,7 +84,7 @@ class SiswaController extends Controller
             'nama_siswa' => 'required|string|max:30',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:L,P',
-            'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon',
+            'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon,'.$request->input('id').',id_siswa',
             'id_kelas' => 'required'
         ]);
 
@@ -88,25 +93,12 @@ class SiswaController extends Controller
             return redirect('siswa/'.$id.'/edit')->withInput()->withErrors($validator);
         }
         $siswa->update($request->all());
-        //update nmr telepon , jika sebelumnya sudah ada no telp
-        if ($siswa->telepon) {
-            //Jika telp diisi , update
-            if ($request->filled('nomor_telepon')) {
-                $telepon = $siswa->telepon;
-                $telepon->nomor_telepon = $request->input('nomor_telepon');
-                $siswa->telepon()->save($telepon);
-            }// jika telp tidak diisi, hapus
-            else{
-                $siswa->telepon->delete();
-            }
-        } // Buat entry baru, jika sebelumnya tidak ada no telp
-        else{
-            if ($request->filled('nomor_telepon')) {
-                $telepon = new Telepon();
-                $telepon->nomor_telepon = $request->input('nomor_telepon');
-                $siswa->telepon()->save($telepon);
-            }
-        }
+        
+        $telepon = $siswa->telepon;
+        $telepon->nomor_telepon = $request->input('nomor_telepon');
+        $siswa->telepon()->save($telepon);
+
+        $siswa->hobi()->sync($request->input('hobi_siswa'));
         return redirect('siswa');
     }
     public function destroy($id)

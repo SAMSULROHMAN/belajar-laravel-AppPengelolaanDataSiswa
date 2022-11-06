@@ -32,6 +32,14 @@
                     {{ $siswa->kelas->nama_kelas }}
                 </td>
             </tr>
+            <tr>
+                <th>Hobby</th>
+                <td>
+                    @foreach ($siswa->hobi as $item)
+                        <span>{{ $item->nama_hobi }}</span>,
+                    @endforeach
+                </td>
+            </tr>
         </table>
     </div>
 @endsection

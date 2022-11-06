@@ -51,6 +51,26 @@
             <span class="help-block">{{ $errors->first('nomor_telepon') }}</span>
         @endif
     </div>
+{{-- Hobi--}}
+@if ($errors->any())
+    <div class="form-group {{ $errors->has('hobi_siswa') ? 'has-error' : 'has-success' }}">
+@else
+    <div class="form-group">
+@endif
+    {!! Form::label('hobi_siswa', 'Hobi:', ['class' => 'control-label']) !!}
+    @if (count($list_hobi) > 0)
+        @foreach ($list_hobi as $key => $value)
+            <div class="checkbox">
+                <label for="">
+                    {!! Form::checkbox('hobi_siswa[]', $key, null, ) !!}
+                    {{ $value }}
+                </label>
+            </div>
+        @endforeach
+    @else
+        <p>Tidak Ada pilihan hobbi, buat dulu ya... !</p>
+    @endif
+
 {{-- Kelas --}}
 @if ($errors->any())
     <div class="form-group {{ $errors->has('id_kelas') ?  'has-error' : 'has-success' }}">
