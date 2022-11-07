@@ -46,23 +46,19 @@ class SiswaController extends Controller
         return redirect('siswa');
     }
 
-    public function show($id)
+    public function show(Siswa $siswa)
     {
-        $siswa = Siswa::findOrFail($id);
         return view('siswa.show',compact('siswa'));
     }
 
-    public function edit($id)
+    public function edit(Siswa $siswa)
     {
-        $siswa = Siswa::findOrFail($id);
         $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
         return view('siswa.edit',compact('siswa'));
     }
 
-    public function update($id,SiswaRequest $request)
+    public function update(Siswa $siswa,SiswaRequest $request)
     {
-        $siswa = Siswa::findOrFail($id);
-
         $input = $request->all();
 
         $siswa->update($request->all());
@@ -86,9 +82,8 @@ class SiswaController extends Controller
         $siswa->hobi()->sync($request->input('hobi_siswa'));
         return redirect('siswa');
     }
-    public function destroy($id)
+    public function destroy(Siswa $siswa)
     {
-        $siswa = Siswa::findOrFail($id);
         $siswa->delete();
         return redirect('siswa');
     }

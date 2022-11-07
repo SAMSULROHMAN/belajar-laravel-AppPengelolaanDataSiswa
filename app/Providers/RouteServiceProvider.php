@@ -26,6 +26,10 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        Route::bind('siswa', function($siswa){
+            return \App\Siswa::findOrFail($siswa);
+        });
     }
 
     /**
