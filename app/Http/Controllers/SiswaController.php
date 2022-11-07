@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Hobi;
 use Illuminate\Http\Request;
 use App\Siswa;
 use App\Telepon;
-use App\Kelas;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\SiswaRequest;
 
 class SiswaController extends Controller
 {
@@ -24,7 +22,7 @@ class SiswaController extends Controller
         return view('siswa.create');
     }
 
-    public function store(Request $request)
+    public function store(SiswaRequest $request)
     {
         $input = $request->all();
 
@@ -61,26 +59,29 @@ class SiswaController extends Controller
         return view('siswa.edit',compact('siswa'));
     }
 
-    public function update($id,Request $request)
+    public function update($id,SiswaRequest $request)
     {
         $siswa = Siswa::findOrFail($id);
 
         $input = $request->all();
 
-        $this->validate($request, [
-            'nisn' => 'required|string|size:4|unique:siswa,nisn,'.$request->input('id'),
-            'nama_siswa' => 'required|string|max:30',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:L,P',
-            'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon,'.$request->input('id').',id_siswa',
-            'id_kelas' => 'required'
-        ]);
-
         $siswa->update($request->all());
 
-        $telepon = $siswa->telepon;
-        $telepon->nomor_telepon = $request->input('nomor_telepon');
-        $siswa->telepon()->save($telepon);
+        if ($siswa->telepon) {
+            if ($request->filled('nomor_telepon')) {
+                $telepon = $siswa->telepon;
+                $telepon->nomor_telepon = $request->input('nomor_telepon');
+                $siswa->telepon()->save($telepon);
+            } else {
+                $siswa->telepon()->delete();
+            }
+        } else {
+            if ($request->filled('nomor_telepon')) {
+                $telepon = new Telepon();
+                $telepon->nomor_telepon = $request->input('nomor_telepon');
+                $siswa->telepon()->save($telepon);
+            }
+        }
 
         $siswa->hobi()->sync($request->input('hobi_siswa'));
         return redirect('siswa');
