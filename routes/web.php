@@ -15,6 +15,8 @@ Route::get('/', 'PagesController@homepage');
 
 Route::get('about','PagesController@about');
 
+Route::get('siswa/cari', 'SiswaController@cari');
+
 Route::resource('siswa', SiswaController::class);
 
 Route::get('date-mutator','SiswaController@dateMutator');

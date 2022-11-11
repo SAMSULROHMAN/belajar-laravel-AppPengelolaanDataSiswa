@@ -101,6 +101,30 @@ class SiswaController extends Controller
 
     }
 
+    public function cari(Request $request)
+    {
+        $kata_kunci = trim($request->input('kata_kunci'));
+        if (!empty($kata_kunci)) {
+            $jenis_kelamin = $request->input('jenis_kelamin');
+            $id_kelas = $request->input('id_kelas');
+
+            //Query
+            $query = Siswa::where('nama_siswa','LIKE','%'.$kata_kunci.'%');
+            (!empty($jenis_kelamin)) ? $query->JenisKelamin($jenis_kelamin) : '';
+            (!empty($id_kelas)) ? $query->Kelas($id_kelas) : '';
+            $siswa_list = $query->paginate(2);
+
+            //URL Links pagination
+            $pagination = (!empty($jenis_kelamin)) ? $siswa_list->appends(['jenis_kelamin' => $jenis_kelamin]) : '';
+            $pagination = (!empty($id_kelas)) ? $pagination = $siswa_list->appends(['id_kelas' => $id_kelas]) : '';
+            $pagination = $siswa_list->appends(['kata_kunci' => $kata_kunci]);
+
+            $jumlah_siswa = $siswa_list->total();
+            return view('siswa.index',compact('siswa_list','kata_kunci','pagination','jumlah_siswa','id_kelas','jenis_kelamin'));
+        }
+        return redirect('siswa');
+    }
+
     private function insertTelepon(Siswa $siswa, SiswaRequest $request)
     {
         $telepon = new Telepon();

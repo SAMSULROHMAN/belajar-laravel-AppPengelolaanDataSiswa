@@ -55,4 +55,15 @@ class Siswa extends Model
     {
         return $this->belongsToMany('App\Hobi', 'hobi_siswa', 'id_siswa', 'id_hobi')->withTimeStamps();
     }
+
+    public function scopeKelas($query, $id_kelas)
+    {
+        return $query->where('id_kelas',$id_kelas);
+    }
+
+    public function scopeJenisKelamin($query,$jenis_kelamin)
+    {
+        return $query->where('jenis_kelamin',$jenis_kelamin);
+    }
+    
 }
