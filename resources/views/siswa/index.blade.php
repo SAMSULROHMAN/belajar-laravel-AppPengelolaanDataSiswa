@@ -2,6 +2,7 @@
 @section('main')
     <div id="homepage">
         <h2>Siswa</h2>
+        @include('_partial.flash_message')
         @if(!empty($siswa_list))
             <table class="table">
                 <thead>

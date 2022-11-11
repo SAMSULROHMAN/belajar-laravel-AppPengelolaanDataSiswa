@@ -7,7 +7,7 @@ use App\Siswa;
 use App\Telepon;
 use App\Http\Requests\SiswaRequest;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Session;
 class SiswaController extends Controller
 {
     public function index()
@@ -41,6 +41,8 @@ class SiswaController extends Controller
         // Insert Hobi
         $siswa->hobi()->attach($request->input('hobi_siswa'));
 
+        Session::flash('flash_message','Data siswa berhasil disimpan');
+
         return redirect('siswa');
     }
 
@@ -51,7 +53,9 @@ class SiswaController extends Controller
 
     public function edit(Siswa $siswa)
     {
-        $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
+        if (!empty($siswa->telepon->nomor_telepon)) {
+            $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
+        }
         return view('siswa.edit',compact('siswa'));
     }
 
@@ -72,12 +76,17 @@ class SiswaController extends Controller
 
         // Update Hobi
         $siswa->hobi()->sync($request->input('hobi_siswa'));
+
+        Session::flash('flash_message','Data siswa berhasil diupdate');
         return redirect('siswa');
     }
     public function destroy(Siswa $siswa)
     {
         $this->hapusFoto($siswa);
         $siswa->delete();
+
+        Session::flash('flash_message','Data siswa berhasil dihapus');
+        Session::flash('penting',true);
         return redirect('siswa');
     }
 
