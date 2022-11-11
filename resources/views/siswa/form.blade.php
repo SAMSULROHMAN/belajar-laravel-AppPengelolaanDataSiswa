@@ -107,6 +107,30 @@
             <span class="help-block">{{ $errors->first('jenis_kelamin') }}</span>
         @endif
     </div>
+{{-- Files ---}}
+@if ($errors->any())
+    <div class="form-group {{ $errors->has('foto') ? 'has-error' : 'has-success'}}">
+@else
+    <div class="form-group">
+@endif
+    {!! Form::label('foto', 'Foto:') !!}
+    {!! Form::file('foto') !!}
+    @if ($errors->has('foto'))
+        <span class="help-block">{{ $errors->first('foto') }}</span>
+    @endif
+
+    @if (isset($siswa))
+        @if (isset($siswa->foto))
+            <img src="{{ asset('fotoupload/'.$siswa->foto)}}" alt="" srcset="">
+        @else
+            @if ($siswa->jenis_kelamin == 'L')
+                <img src="{{ asset('fotoupload/dummymale.png')}}" alt="" srcset="">
+            @else
+                <img src="{{ asset('fotoupload/dummyfemale.png')}}" alt="" srcset="">
+            @endif
+        @endif
+    @endif
+
 <div class="form-group">
     {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}
 </div>

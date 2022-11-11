@@ -155,6 +155,12 @@ return [
         ],
         'id_kelas' => [
             'required' => 'Kolom KELAS harus diisi'
+        ],
+        'foto' => [
+            'image' => 'Kolom FOTO hanya boleh berisi file gambar',
+            'max' => 'Kolom FOTO tidak boleh lebih dari 500kb',
+            'mimes' => 'Kolom FOTO hanya boleh di isi file *.jpg, *.jpeg, *.bmp, *.png',
+            'dimensions' => 'FOTO harus berukuran 150x180 pixel'
         ]
     ],
 

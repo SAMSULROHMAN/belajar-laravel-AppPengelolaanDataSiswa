@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Siswa;
 use App\Telepon;
 use App\Http\Requests\SiswaRequest;
+use Illuminate\Support\Facades\Storage;
 
 class SiswaController extends Controller
 {
@@ -26,21 +27,18 @@ class SiswaController extends Controller
     {
         $input = $request->all();
 
-        // Pake trait ValidateRequest
-        $this->validate($request,[
-            'nisn' => 'required|string|size:4|unique:siswa,nisn',
-            'nama_siswa' => 'required|string|max:30',
-            'tanggal_lahir' => 'required|date',
-            'nomor_telepon' => 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon',
-            'jenis_kelamin' => 'required|in:L,P',
-            'id_kelas' => 'required',
-        ]);
-
+        //foto
+        if ($request->hasFile('foto')) {
+            $input['foto'] = $this->uploadFoto($request);
+        }
+        // Insert Siswa
         $siswa = Siswa::create($input);
-        $telepon = new Telepon();
-        $telepon->nomor_telepon = $request->input('nomor_telepon');
-        $siswa->telepon()->save($telepon);
+        // Insert Telepon
+        if ($request->filled('nomor_telepon')) {
+            $this->insertTelepon($siswa,$request);
+        }
 
+        // Insert Hobi
         $siswa->hobi()->attach($request->input('hobi_siswa'));
 
         return redirect('siswa');
@@ -61,29 +59,24 @@ class SiswaController extends Controller
     {
         $input = $request->all();
 
-        $siswa->update($request->all());
-
-        if ($siswa->telepon) {
-            if ($request->filled('nomor_telepon')) {
-                $telepon = $siswa->telepon;
-                $telepon->nomor_telepon = $request->input('nomor_telepon');
-                $siswa->telepon()->save($telepon);
-            } else {
-                $siswa->telepon()->delete();
-            }
-        } else {
-            if ($request->filled('nomor_telepon')) {
-                $telepon = new Telepon();
-                $telepon->nomor_telepon = $request->input('nomor_telepon');
-                $siswa->telepon()->save($telepon);
-            }
+        //Foto
+        if ($request->hasFile('foto')) {
+            $input['foto'] = $this->updateFoto($siswa,$request);
         }
 
+        // Update Siswa
+        $siswa->update($input);
+
+        // Update Telepon
+        $this->updateTelepon($siswa,$request);
+
+        // Update Hobi
         $siswa->hobi()->sync($request->input('hobi_siswa'));
         return redirect('siswa');
     }
     public function destroy(Siswa $siswa)
     {
+        $this->hapusFoto($siswa);
         $siswa->delete();
         return redirect('siswa');
     }
@@ -97,5 +90,71 @@ class SiswaController extends Controller
         return "Siswa {$nama} lahir pada {$tanggal_lahir} .<br>
         Ulang Tahun ke-30 jatuh pada {$ulang_tahun}";
 
+    }
+
+    private function insertTelepon(Siswa $siswa, SiswaRequest $request)
+    {
+        $telepon = new Telepon();
+        $telepon->nomor_telepon = $request->input('nomor_telepon');
+        $siswa->telepon()->save($telepon);
+    }
+
+    private function updateTelepon(Siswa $siswa, SiswaRequest $request)
+    {
+        if ($siswa->telepon) {
+            if ($request->filled('nomor_telepon')) {
+                $telepon = $siswa->telepon;
+                $telepon->nomor_telepon = $request->input('nomor_telepon');
+                $siswa->telepon()->save($telepon);
+            } else {
+                $siswa->telepon()->delete();
+            }
+        }
+        else{
+            if ($request->filled('nomor_telepon')) {
+                $telepon = new Telepon;
+                $telepon->nomor_telepon = $request->input('nomor_telepon');
+                $siswa->telepon()->save($telepon);
+            }
+        }
+    }
+
+    private function uploadFoto(SiswaRequest $request)
+    {
+        $foto = $request->file('foto');
+        $ext = $foto->getClientOriginalExtension();
+        if ($request->file('foto')->isValid()) {
+            $foto_name = date('YmdHis').".$ext";
+            $request->file('foto')->move('fotoupload',$foto_name);
+            return $foto_name;
+        }
+        return false;
+    }
+
+    private function updateFoto(Siswa $siswa, SiswaRequest $request)
+    {
+        if ($request->hasFile('foto')) {
+            $exist = Storage::disk('foto')->exists($siswa->foto);
+            if (isset($siswa->foto) && $exist) {
+                $delete = Storage::disk('foto')->delete($siswa->foto);
+            }
+
+            $foto = $request->file('foto');
+            $ext = $foto->getClientOriginalExtension();
+            if ($request->file('foto')->isValid()) {
+                $foto_name = date('YmdHis').".$ext";
+                $upload_path = 'fotoupload';
+                $request->file('foto')->move($upload_path,$foto_name);
+                return $foto_name;
+            }
+        }
+    }
+
+    private function hapusFoto(Siswa $siswa)
+    {
+        $is_foto_exist = Storage::disk('foto')->exists($siswa->foto);
+        if ($is_foto_exist) {
+            Storage::disk('foto')->delete($siswa->foto);
+        }
     }
 }
