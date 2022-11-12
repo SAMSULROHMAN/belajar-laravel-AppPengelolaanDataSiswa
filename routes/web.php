@@ -19,5 +19,9 @@ Route::get('siswa/cari', 'SiswaController@cari');
 
 Route::resource('siswa', SiswaController::class);
 
+Route::resource('kelas', KelasController::class)->parameters([
+    'kelas' => 'kelas'
+]);
+
 Route::get('date-mutator','SiswaController@dateMutator');
 

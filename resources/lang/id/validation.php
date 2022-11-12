@@ -161,6 +161,11 @@ return [
             'max' => 'Kolom FOTO tidak boleh lebih dari 500kb',
             'mimes' => 'Kolom FOTO hanya boleh di isi file *.jpg, *.jpeg, *.bmp, *.png',
             'dimensions' => 'FOTO harus berukuran 150x180 pixel'
+        ],
+        'nama_kelas' => [
+            'required' => 'Nama Kelas harus diisi .',
+            'string' => 'Nama Kelas harus string.',
+            'max' => 'Nama Kelas Maksimum 20 karakter'
         ]
     ],
 

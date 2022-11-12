@@ -19,6 +19,16 @@
                     <li><a href="{{ url('siswa') }}">Siswa</a></li>
                 @endif
 
+                @if (!empty($halaman) && $halaman == 'kelas')
+                    <li class="active">
+                        <a href="{{ route('kelas.index') }}">
+                            Kelas <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                @else
+                    <li><a href="{{ url('kelas') }}">Kelas</a></li>
+                @endif
+
                 @if (!empty($halaman) && $halaman == 'about')
                     <li class="active"><a href="{{ url('about') }}">About
                             <span class="sr-only">(current)</span></a></li>

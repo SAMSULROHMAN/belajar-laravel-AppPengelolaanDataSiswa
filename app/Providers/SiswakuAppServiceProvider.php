@@ -28,9 +28,15 @@ class SiswakuAppServiceProvider extends ServiceProvider
         if (Request::segment(1) == 'siswa') {
             $halaman = 'siswa';
         }
+
         if (Request::segment(1) == 'about') {
             $halaman = 'about';
         }
+        
+        if (request()->segment(1) == 'kelas') {
+            $halaman = 'kelas';
+        }
         view()->share('halaman',$halaman);
+
     }
 }
