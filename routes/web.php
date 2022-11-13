@@ -23,5 +23,7 @@ Route::resource('kelas', KelasController::class)->parameters([
     'kelas' => 'kelas'
 ]);
 
+Route::resource('hobi', HobiController::class);
+
 Route::get('date-mutator','SiswaController@dateMutator');
 

@@ -30,9 +30,13 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('siswa', function($siswa){
             return \App\Siswa::findOrFail($siswa);
         });
-        
+
         Route::bind('kelas',function($kelas){
             return \App\Kelas::findOrFail($kelas);
+        });
+
+        Route::bind('hobi',function($hobi){
+            return \App\Hobi::findOrFail($hobi);
         });
     }
 
