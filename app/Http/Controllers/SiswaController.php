@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 class SiswaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth',['except' => [
+            'index',
+            'show',
+            'cari',
+        ]]);
+    }
     public function index()
     {
         $siswa_list = Siswa::orderBy('nama_siswa','asc')->paginate(5);

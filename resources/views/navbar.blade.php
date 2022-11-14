@@ -19,25 +19,29 @@
                     <li><a href="{{ url('siswa') }}">Siswa</a></li>
                 @endif
 
-                @if (!empty($halaman) && $halaman == 'kelas')
-                    <li class="active">
-                        <a href="{{ route('kelas.index') }}">
-                            Kelas <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                @else
-                    <li><a href="{{ url('kelas') }}">Kelas</a></li>
+                @if (Auth::check())
+                    @if (!empty($halaman) && $halaman == 'kelas')
+                        <li class="active">
+                            <a href="{{ route('kelas.index') }}">
+                                Kelas <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                    @else
+                        <li><a href="{{ url('kelas') }}">Kelas</a></li>
+                    @endif
                 @endif
 
-                @if (!empty($halaman) && $halaman == 'hobi')
-                    <li class="active">
-                        <a href="{{ route('hobi.index')}}">
-                            Hobi
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                @else
-                    <li><a href="{{ url('hobi') }}">Hobi</a></li>
+                @if (Auth::check())
+                    @if (!empty($halaman) && $halaman == 'hobi')
+                        <li class="active">
+                            <a href="{{ route('hobi.index') }}">
+                                Hobi
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                    @else
+                        <li><a href="{{ url('hobi') }}">Hobi</a></li>
+                    @endif
                 @endif
 
                 @if (!empty($halaman) && $halaman == 'about')
@@ -47,24 +51,28 @@
                     <li><a href="{{ url('about') }}">About</a></li>
                 @endif
 
-                @if (!empty($halaman) && $halaman = 'user')
-                    <li class="active">
-                        <a href="{{ url('user')}}">User <span class="sr-only">(current)</span></a>
-                    </li>
-                @else
-                    <li><a href="{{ url('user') }}">User</a></li>
+                @if (Auth::check() && Auth::user()->level == 'admin')
+                    @if (!empty($halaman) && ($halaman = 'user'))
+                        <li class="active">
+                            <a href="{{ url('user') }}">User <span class="sr-only">(current)</span></a>
+                        </li>
+                    @else
+                        <li><a href="{{ url('user') }}">User</a></li>
+                    @endif
                 @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 @if (Auth::check())
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }}
                             <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
+                            <a href="{{ route('logout') }}" class="dropdown-item"
+                                onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
 
                             <form action="{{ route('logout') }}" method="POST" style="display:none;" id="logout-form">
