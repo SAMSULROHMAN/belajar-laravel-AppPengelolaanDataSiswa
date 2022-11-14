@@ -46,6 +46,14 @@
                 @else
                     <li><a href="{{ url('about') }}">About</a></li>
                 @endif
+
+                @if (!empty($halaman) && $halaman = 'user')
+                    <li class="active">
+                        <a href="{{ url('user')}}">User <span class="sr-only">(current)</span></a>
+                    </li>
+                @else
+                    <li><a href="{{ url('user') }}">User</a></li>
+                @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 @if (Auth::check())

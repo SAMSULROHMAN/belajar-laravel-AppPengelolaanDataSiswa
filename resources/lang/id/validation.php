@@ -171,6 +171,16 @@ return [
             'required' => 'Nama Hobi harus diisi',
             'string' => 'Nama Hobi harus string',
             'max' => 'Nama Hibi Maksimum 30 Karakter'
+        ],
+        'email' => [
+            'required' => 'Nama EMAIL harus diiisi',
+            'email' => 'Email harus valid',
+            'max' => 'Email maksimum 100 karakter',
+            'unique' => 'Email sudah terdaftar'
+        ],
+        'password' => [
+            'confirmed' => 'Password tidak cocok dengan kolom konfirmasi password.',
+            'min' => 'Password minimal 6 karakter'
         ]
     ],
 
