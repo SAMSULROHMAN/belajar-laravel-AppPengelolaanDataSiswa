@@ -15,6 +15,10 @@ Route::get('/', 'PagesController@homepage');
 
 Route::get('about','PagesController@about');
 
+Auth::routes(['register' => false]);
+
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('siswa/cari', 'SiswaController@cari');
 
 Route::resource('siswa', SiswaController::class);

@@ -48,8 +48,29 @@
                 @endif
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Login</a></li>
-                <li class="dropdown"></li>
+                @if (Auth::check())
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                            <span class="caret"></span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+
+                            <form action="{{ route('logout') }}" method="POST" style="display:none;" id="logout-form">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="nav-link">
+                            {{ __('Login') }}
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
